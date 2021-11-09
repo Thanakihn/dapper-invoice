@@ -3,7 +3,7 @@
 \ProvidesClass{dapper-invoice}[2015/04/12]
 \NeedsTeXFormat{LaTeX2e}
 \LoadClass[11pt]{article}
-
+\RequirePackage[utf8]{inputenc}
 % For page number calculations
 \RequirePackage{ifthen}
 
@@ -12,8 +12,8 @@
 \SetupKeyvalOptions{%
     prefix=dapper@
 }
-% Default currency option is "dollar"
-\DeclareStringOption[dollar]{currency}[dollar]
+% Default currency option is "euro"
+\DeclareStringOption[euro]{currency}[euro]
 \ProcessKeyvalOptions*
 
 \RequirePackage{eurosym}
@@ -77,9 +77,9 @@
         bookmarksopen  = false,
         bookmarksdepth = 2,% to show sections and subsections
         pdfauthor      = {#1},
-        pdftitle       = {#2 --- Invoice \##3 for #4},
-        pdfsubject     = {Invoice \##3},
-        pdfkeywords    = {invoice, #2, #4}
+        pdftitle       = {#2 --- Facture \##3 for #4},
+        pdfsubject     = {Facture \##3},
+        pdfkeywords    = {Facture, #2, #4}
     }
 }
 
@@ -92,8 +92,8 @@
     \begin{minipage}[t]{.6\linewidth} {\headerStyle #1} \end{minipage}
     \hfill
     \begin{tabular}[t]{@{} c @{}}
-        {\headerStyle \invoiceSpacing{INVOICE} \##2} \\
-        {\color{subduedColor} \today}
+        {\headerStyle \invoiceSpacing{Facture} \##2} \\
+        {\color{subduedColor} \DATE}
     \end{tabular}
 
     \addvspace{8ex}
@@ -139,7 +139,7 @@
     \noalign{\smallskip}
     {\itemizationHeaderStyle Date} &
     {\itemizationHeaderStyle Description} &
-    {\itemizationHeaderStyle Amount}
+    {\itemizationHeaderStyle Quantité}
     \\
     \noalign{\smallskip}
     \hline
@@ -178,6 +178,30 @@
     \end{longtable}
 }
 
+\newenvironment{AchatClassique}{
+    \setcounter{colskipcount}{2}
+    \setlength\LTleft{0pt}
+    \setlength\LTright{0pt}
+    \begin{longtable}{p{.6\textwidth} l c r}
+    \hline
+    \noalign{\smallskip}
+    {\itemizationHeaderStyle Produit} &
+    {\itemizationHeaderStyle Prix } &
+    {\itemizationHeaderStyle Quantit\'e} &
+    {\itemizationHeaderStyle Total}
+    \\
+    \noalign{\smallskip}
+    \hline
+    \noalign{\bigskip}
+    \endhead
+    \noalign{\bigskip}
+    \hline
+    \endfoot
+    \endlastfoot
+}{
+    \end{longtable}
+}
+
 \newenvironment{hoursItemizationWithProject}{
     \setcounter{colskipcount}{6}
     \setlength\LTleft{0pt}
@@ -186,11 +210,11 @@
     \hline
     \noalign{\smallskip}
     {\itemizationHeaderStyle Date} &
-    {\itemizationHeaderStyle Project} &
+    {\itemizationHeaderStyle Projet} &
     {\itemizationHeaderStyle Description} &
-    \multicolumn{2}{l}{\itemizationHeaderStyle Hours} &
-    {\itemizationHeaderStyle Rate} &
-    {\itemizationHeaderStyle Amount}
+    \multicolumn{2}{l}{\itemizationHeaderStyle Temps} &
+    {\itemizationHeaderStyle Co\^ut} &
+    {\itemizationHeaderStyle Total}
     \\
     \noalign{\smallskip}
     \hline
@@ -283,6 +307,52 @@
     \\
     \noalign{\medskip}
 }
+
+\newcommand{\DATE}{\today}
+
+\newcommand{\dateFacturation}[1]{\renewcommand{\DATE}{#1}}
+
+%%%% Définition fonctions ajouter produit
+%\newcommand{\ajouterProduit}[3]{  %{Prix}{Quantité}{Description}
+%    
+%    \begin{minipage}[t]{.6\textwidth}
+%        \begin{itemize}[leftmargin=0pt, labelsep=1pt, itemsep=0pt] \itemizationRowStyle #3 \end{itemize}
+%    \end{minipage} &
+%    {\itemizationRowStyle #1} &
+%    {\itemizationRowStyle #2}
+%    \\
+%    \noalign{\medskip}
+%}
+
+
+\newcommand{\ajouterProduit}[4]{  %{Prix}{Quantité}{total}{Description}
+    \begin{minipage}[t]{.6\textwidth}
+        \begin{itemize}[leftmargin=0pt, labelsep=1pt, itemsep=0pt] \itemizationRowStyle #4 \end{itemize}
+    \end{minipage} &
+    {\itemizationRowStyle #1} &
+    {\itemizationRowStyle #2} &
+    {\itemizationRowStyle #3}
+    \\
+    \noalign{\medskip}
+}
+
+% TODO, maybe
+%\newcommand{\ajouterProduit}[5]{  %{Date}{Prix}{Quantité}{Total}{Description}
+%    {\itemizationRowStyle #1} &
+%    {\itemizationRowStyle #4} &
+%    \begin{minipage}[t]{0.5\textwidth}
+%        \begin{itemize}[leftmargin=0pt, labelsep=1pt, itemsep=0pt] \itemizationRowStyle #5 \end{itemize}
+%    \end{minipage} &
+%    {\itemizationRowStyle \@formatHoursLeft{#2}} &
+%    {\itemizationRowStyle \@formatHoursRight{#2}} &
+%    {\itemizationRowStyle \currencysym#3} &
+%    {\itemizationRowStyle \currencysym\calcamount{#2}{#3}}
+%    \\
+%    \noalign{\medskip}
+%}
+
+
+
 
 \newcommand{\beginsummary}{
     \noalign{\bigskip}
