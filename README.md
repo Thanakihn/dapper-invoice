@@ -1,3 +1,7 @@
+## Fork Tan
+
+version française pour faire de belles factures facilement. 
+
 ## dapper-invoice
 
 A billable-time invoice featuring style over substance.
